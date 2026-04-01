@@ -105,3 +105,13 @@ test_description_includes_counts if {
     desc := policy.description with input as inp
     contains(desc, "[2/3 pipelines failed]")
 }
+
+test_description_defaults_to_zero_counts_when_pipeline_runs_missing if {
+    desc := policy.description with input as {}
+    contains(desc, "[0/0 pipelines failed]")
+}
+
+test_description_defaults_to_zero_counts_when_pipeline_runs_null if {
+    desc := policy.description with input as {"pipeline_runs": null}
+    contains(desc, "[0/0 pipelines failed]")
+}

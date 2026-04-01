@@ -3,9 +3,18 @@ package compliance_framework.pipeline_health
 # Maximum allowed failure rate for pipeline runs (0.5 = 50%).
 max_failure_rate := 0.5
 
-total := count(input.pipeline_runs)
+pipeline_runs := [] if {
+    object.get(input, "pipeline_runs", null) == null
+}
+
+pipeline_runs := runs if {
+    runs := object.get(input, "pipeline_runs", null)
+    runs != null
+}
+
+total := count(pipeline_runs)
 failed := count([x |
-    x := input.pipeline_runs[_]
+    x := pipeline_runs[_]
     x.status == "failed"
 ])
 
@@ -13,6 +22,7 @@ risk_templates := [{
   "name": "Repository has excessive pipeline failure rate",
   "title": "High CI/CD Pipeline Failure Rate Indicates Systemic Build or Test Instability",
   "statement": "A pipeline failure rate exceeding the allowed threshold indicates that automated quality gates are not reliably passing. This suggests either that defective code is frequently being introduced, that the CI/CD pipeline itself is misconfigured, or that required checks are being bypassed. Persistent failures erode trust in automated controls and increase the likelihood of defective or vulnerable changes reaching production.",
+  "violation_ids": ["excessive_pipeline_failures"],
   "likelihood_hint": "moderate",
   "impact_hint": "moderate",
   "threat_refs": [
