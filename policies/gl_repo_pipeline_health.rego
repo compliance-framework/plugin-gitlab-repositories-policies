@@ -42,11 +42,11 @@ risk_templates := [{
   }
 }]
 
-violation[{"id": "excessive_pipeline_failures", "remarks": sprintf("Pipeline failure rate is too high: %d/%d pipelines failed (max allowed: <%d%%)", [failed, total, max_failure_rate * 100])}] if {
+violation[{"id": "excessive_pipeline_failures", "remarks": sprintf("Pipeline failure rate is too high: %d/%d pipelines failed (max allowed: <%.0f%%)", [failed, total, max_failure_rate * 100])}] if {
     total > 0
     failed / total >= max_failure_rate
 }
 
 title := "Repository has an acceptable pipeline failure rate"
-description := sprintf("All repositories must have a pipeline failure rate below %d%%. [%d/%d pipelines failed]", [max_failure_rate * 100, failed, total])
-remarks := sprintf("Pipeline failure rate is evaluated over the configured lookback window. Failures are counted when pipeline status is 'failed'. Max allowed failure rate: %d%%.", [max_failure_rate * 100])
+description := sprintf("All repositories must have a pipeline failure rate below %.0f%%. [%d/%d pipelines failed]", [max_failure_rate * 100, failed, total])
+remarks := sprintf("Pipeline failure rate is evaluated over the configured lookback window. Failures are counted when pipeline status is 'failed'. Max allowed failure rate: %.0f%%.", [max_failure_rate * 100])

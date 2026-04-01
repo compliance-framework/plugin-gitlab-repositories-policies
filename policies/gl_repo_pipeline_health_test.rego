@@ -19,7 +19,7 @@ test_all_success_ok if {
 }
 
 test_exactly_50_percent_failure_violation if {
-    # 5 failed out of 10 = exactly 50% — strictly greater than threshold, so violation
+    # 5 failed out of 10 = exactly 50% -- at the threshold, so violation
     inp := {"pipeline_runs": [
         {"status": "success"},
         {"status": "success"},

@@ -70,6 +70,13 @@ violation[{"id": "pipeline_run_too_old", "remarks": sprintf("Last pipeline run i
     pipeline_too_old
 }
 
+# Sanitization violation only: this input is invalid for evaluation, but it
+# does not map to an additional risk template.
+violation[{"remarks": "Last pipeline run is present but has no valid updated_at timestamp."}] if {
+    pipeline_present
+    not pipeline_timestamp_valid
+}
+
 violation[{"id": "no_pipeline_run", "remarks": "No pipeline runs found for this repository."}] if {
     not pipeline_present
 }
@@ -78,9 +85,15 @@ pipeline_present if {
     last != null
 }
 
-pipeline_too_old if {
+pipeline_timestamp_valid if {
     ts := last.updated_at
     ts != null
+    parsed_ns := time.parse_rfc3339_ns(ts)
+}
+
+pipeline_too_old if {
+    pipeline_timestamp_valid
+    ts := last.updated_at
 
     run_ns := time.parse_rfc3339_ns(ts)
     now_ns := time.now_ns()

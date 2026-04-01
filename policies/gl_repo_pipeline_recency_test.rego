@@ -3,6 +3,12 @@ package compliance_framework.pipeline_recency_test
 import data.compliance_framework.pipeline_recency as policy
 
 test_no_pipeline_run_violation if {
+    inp := {"last_pipeline_run": null}
+    v := count(policy.violation) with input as inp
+    v == 1
+}
+
+test_missing_last_pipeline_run_field_is_treated_as_no_pipeline_run if {
     inp := {}
     v := count(policy.violation) with input as inp
     v == 1
@@ -41,7 +47,21 @@ test_old_pipeline_violation_id if {
 }
 
 test_no_pipeline_violation_id if {
-    inp := {}
+    inp := {"last_pipeline_run": null}
     policy.violation[v] with input as inp
     v.id == "no_pipeline_run"
+}
+
+test_missing_pipeline_timestamp_violation_has_no_id if {
+    inp := {"last_pipeline_run": {"status": "success"}}
+    policy.violation[v] with input as inp
+    v.remarks == "Last pipeline run is present but has no valid updated_at timestamp."
+    not v.id
+}
+
+test_invalid_pipeline_timestamp_violation_has_no_id if {
+    inp := {"last_pipeline_run": {"updated_at": "not-a-timestamp", "status": "success"}}
+    policy.violation[v] with input as inp
+    v.remarks == "Last pipeline run is present but has no valid updated_at timestamp."
+    not v.id
 }
