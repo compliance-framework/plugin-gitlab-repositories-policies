@@ -1,0 +1,2 @@
+lisa-selfreview:
+Pass 1 (core + rego-policy packs): approve, no findings on the diff. The Rego diff is pure opa fmt 1.14.1 output plus `parsed_ns :=` -> `_ :=` (strict-mode unused var); the opa fmt rewrites (`mul(...)` in the head, parenthesised left-associative arithmetic) are equivalent and the eval comparison over 27 inputs matched exactly. Pre-existing and out of scope: no METADATA blocks, package names differ from file stems, test packages are `<pkg>_test`, the sanitisation violation has no id, `%.0f` with an integer renders `%!f(int=50)` in remarks.
