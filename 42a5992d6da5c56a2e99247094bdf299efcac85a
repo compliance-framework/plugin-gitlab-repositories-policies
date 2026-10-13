@@ -1,0 +1,2 @@
+lisa-selfreview:
+pass 1 (ccf-review packs core,rego-policy): approve, no findings. Checked CORE-CI-001 (callers: top-level permissions contents: read, only SHA-pinned shared workflows), CORE-DUP-001 (opa-version 1.14.1 only in release.yml; preview uses the shared default 1.14.1, as the mock), CORE-DOC-001 (README covers make build/test, not releasing; unchanged). Gate: actionlint v1.7.12 clean; OPA 1.14.1 build/check ok, test 19/19.
