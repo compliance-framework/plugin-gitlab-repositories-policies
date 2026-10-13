@@ -1,2 +1,5 @@
 lisa-selfreview:
 Pass 1 (core + rego-policy packs): approve, no findings on the diff. The Rego diff is pure opa fmt 1.14.1 output plus `parsed_ns :=` -> `_ :=` (strict-mode unused var); the opa fmt rewrites (`mul(...)` in the head, parenthesised left-associative arithmetic) are equivalent and the eval comparison over 27 inputs matched exactly. Pre-existing and out of scope: no METADATA blocks, package names differ from file stems, test packages are `<pkg>_test`, the sanitisation violation has no id, `%.0f` with an integer renders `%!f(int=50)` in remarks.
+
+lisa-design:
+Fix errors only (user decision 2026-10-13): Regal warnings (6 prefer-some-in-iteration, 5 use-some-for-output-vars) are left as they are. Unused `parsed_ns` replaced by `_ :=` rather than a bare call, because a bare call trips Regal's unassigned-return-value error; same truthiness (undefined when parsing fails).
